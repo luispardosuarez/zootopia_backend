@@ -1,11 +1,13 @@
 package group.zootopia.backend.config;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,9 +47,8 @@ public class SecurityConfiguration {
                         .logoutUrl(endpoint + "/logout")
                         .deleteCookies("JSESSIONID"))
                 .authorizeHttpRequests(auth -> auth
-                        // .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-                        // .requestMatchers(HttpMethod.GET, endpoint + "/countries").permitAll()
-                        // .requestMatchers(endpoint + "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, endpoint + "/countries").permitAll()
+                        .requestMatchers(endpoint + "/users").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .userDetailsService(jpaUserDetailsService)
                 .httpBasic(Customizer.withDefaults())
